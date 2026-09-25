@@ -27,7 +27,7 @@ internal class BankAccount
     {
        
         Owner = name; // this.Owner = name
-        MakeDeposit(initialBalance,DateTime.UtcNow, "Initial balance");
+        MakeDeposit(initialBalance,DateTime.UtcNow, "Initial balance,,");
         Number = s_accountNuberSeed.ToString();
         s_accountNuberSeed++;
     }

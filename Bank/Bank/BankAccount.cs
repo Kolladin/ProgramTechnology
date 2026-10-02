@@ -2,7 +2,7 @@
 
 namespace Bank;
 
-internal class BankAccount
+public class BankAccount
 { 
     static private int s_accountNuberSeed = 1000000000;
     public string Number { get; }
@@ -73,6 +73,20 @@ internal class BankAccount
         return report.ToString();
     }
 
+    // Ключевое слово virtual позволяет в дочернем классе
+    // предоставить другую реализацию
+    // метода PerformMonthEndTransactions
+    public virtual void PerformMonthEndTransactions()
+    {
 
+    }
+
+
+    // Переопределяем метод, который унаследован от базового класса Object
+    // этот метод должен возвращать строку 
+    public override string ToString()
+    {
+        return $"Type: {GetType().Name}\tOwner: {Owner}\t Number of account: {Number}\tBalance: {Balance}";
+    }
 }
 

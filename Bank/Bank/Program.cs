@@ -7,8 +7,8 @@
 
             BankAccount account1 = new BankAccount("Yana", 100000);
             BankAccount account2 = new BankAccount("Lena", 10);
-            Console.WriteLine($"account {account1.Balance} ${account1.Number} {account1.Owner}");
-            Console.WriteLine($"account {account2.Balance} ${account2.Number} {account2.Owner}");
+            Console.WriteLine($"account {account1.Balance}$ {account1.Number} {account1.Owner}");
+            Console.WriteLine($"account {account2.Balance}$ {account2.Number} {account2.Owner}");
 
             account1.MakeDeposit(2000000, DateTime.UtcNow, ":)");
             Console.WriteLine(account1.Balance);
@@ -57,7 +57,31 @@
                 Console.WriteLine(account.GetAccountHistory());
             }
 
-        } 
+
+            Console.WriteLine("\nПроверка статусов");
+
+            BankAccount regular = new("Regular Client", 20000m);
+            regular.Status = AccountStatus.Regular;
+            regular.PerformMonthEndTransactions();
+            Console.WriteLine($"Regular: {regular.Balance} руб.");
+
+            BankAccount premium = new("Premium Client", 20000m);
+            premium.Status = AccountStatus.Premium;
+            premium.PerformMonthEndTransactions();
+            Console.WriteLine($"Premium: {premium.Balance} руб.");
+
+            BankAccount vip = new("VIP Client", 20000m);
+            vip.Status = AccountStatus.VIP;
+            vip.PerformMonthEndTransactions();
+            Console.WriteLine($"VIP: {vip.Balance} руб.");
+
+            vip.MakeWithdrawal(1000m, DateTime.UtcNow, "Test purchase");
+            Console.WriteLine($"VIP после списания: {vip.Balance} руб.");
+
+
+            AuditLog.PrintLog();
+
+        }
     }
 
 }

@@ -11,7 +11,7 @@ public class LineOfCreditAccount : BankAccount
     /// Создаёт банковский счёт с кредитным лимитом.
     /// </summary>
     /// <param name="name">Имя владельца счёта.</param>
-    /// <param name="initialBalance">Начальный баланс счёта.</param>
+    /// <param name="initialBalance">Начальный баланс счёта.</param> 
     /// <param name="creditLimit">
     /// Кредитный лимит, на который разрешено уходить в минус.
     /// </param>

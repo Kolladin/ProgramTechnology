@@ -33,7 +33,7 @@ public class AuditLog
     {
         Console.WriteLine("\nЖурнал аудита");
 
-        foreach (string record in _records)
+        foreach (string record in _records) 
         {
             Console.WriteLine(record);
         }

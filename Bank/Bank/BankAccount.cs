@@ -150,7 +150,7 @@ public class BankAccount
 
         if (Status == AccountStatus.VIP)
         {
-            decimal cashback = amount * 0.05m;
+            decimal cashback = amount * 0.05m; 
 
             MakeDeposit(
                 cashback,

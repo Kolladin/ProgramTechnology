@@ -9,7 +9,7 @@ public enum AccountStatus
     /// Обычный клиент.
     /// </summary>
     Regular,
-
+     
     /// <summary>
     /// Премиальный клиент.
     /// </summary>

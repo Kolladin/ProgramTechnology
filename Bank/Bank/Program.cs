@@ -1,10 +1,13 @@
 ﻿namespace Bank
 {
+    /// <summary>
+    /// Содержит точку входа банковского приложения.
+    /// </summary>
     public class Program
     {
         static void Main(string[] args)
         {
-
+             
             BankAccount account1 = new BankAccount("Yana", 100000);
             BankAccount account2 = new BankAccount("Lena", 10);
             Console.WriteLine($"account {account1.Balance}$ {account1.Number} {account1.Owner}");
@@ -58,28 +61,43 @@
             }
 
 
-            Console.WriteLine("\nПроверка статусов");
+            Console.WriteLine("\nAccount Status Test");
 
             BankAccount regular = new("Regular Client", 20000m);
             regular.Status = AccountStatus.Regular;
             regular.PerformMonthEndTransactions();
-            Console.WriteLine($"Regular: {regular.Balance} руб.");
+            Console.WriteLine($"Regular: {regular.Balance} RUB.");
 
             BankAccount premium = new("Premium Client", 20000m);
             premium.Status = AccountStatus.Premium;
             premium.PerformMonthEndTransactions();
-            Console.WriteLine($"Premium: {premium.Balance} руб.");
+            Console.WriteLine($"Premium: {premium.Balance} RUB.");
 
             BankAccount vip = new("VIP Client", 20000m);
             vip.Status = AccountStatus.VIP;
             vip.PerformMonthEndTransactions();
-            Console.WriteLine($"VIP: {vip.Balance} руб.");
+            Console.WriteLine($"VIP: {vip.Balance} RUB.");
 
             vip.MakeWithdrawal(1000m, DateTime.UtcNow, "Test purchase");
-            Console.WriteLine($"VIP после списания: {vip.Balance} руб.");
+            Console.WriteLine($"VIP balance after withdrawal: {vip.Balance} RUB.");
 
 
             AuditLog.PrintLog();
+
+
+            Console.WriteLine("\nTransfer Test");
+
+            BankAccount sender = new("Ivan", 5000m);
+            BankAccount receiver = new("Petr", 1000m);
+
+            BankTransfer.Transfer(sender, receiver, 1500m);
+
+            Console.WriteLine($"Sender balance: {sender.Balance}");
+            Console.WriteLine($"Receiver balance: {receiver.Balance}");
+
+            Console.WriteLine(sender.GetAccountHistory());
+            Console.WriteLine(receiver.GetAccountHistory());
+    
 
         }
     }

@@ -41,7 +41,7 @@ public class GiftCartAccount : BankAccount
                 _monthlyDeposit,
                 DateTime.UtcNow,
                 "Add monthly deposit");
-        }
+        } 
     }
 
     /// <summary>

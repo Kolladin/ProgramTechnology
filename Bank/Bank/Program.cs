@@ -1,90 +1,27 @@
-﻿namespace Bank
+﻿using BankAccounts.Core.AccountNumbers;
+using BankAccounts.Core.Factories;
+using BankAccounts.Core.Statements;
+using BankAccounts.Core.Time;
+
+
+namespace BankAccounts.Console
 {
-    /// <summary>
-    /// Contains the entry point of the banking application.
-    /// </summary>
-    public class Program
+    internal class Program
     {
         static void Main(string[] args)
         {
+            var clock = new SystemClock();
+            var factory =
+                new AccountFactory(clock, new SequentialAccountNumberGenerator());
+            var formatter = new TextStatementFormatter();
 
-            BankAccount account1 = new BankAccount("Yana", 100000);
-            BankAccount account2 = new BankAccount("Lena", 10);
-            Console.WriteLine($"account {account1.Balance}$ {account1.Number} {account1.Owner}");
-            Console.WriteLine($"account {account2.Balance}$ {account2.Number} {account2.Owner}");
+            var savings = factory.CreateInterestEarning("Yana", 10000m);
+            savings.Deposit(100m, clock.Now, "asda");
 
-            account1.MakeDeposit(2000000, DateTime.UtcNow, ":)");
-            Console.WriteLine(account1.Balance);
-            account1.MakeWithdrawal(200, DateTime.UtcNow, ":(");
-            Console.WriteLine(account1.Balance);
-
-            Console.WriteLine(account1.GetAccountHistory());
-
-            try
-            {
-                account2.MakeWithdrawal(10000, DateTime.UtcNow, ":(");
-            }
-            catch (InvalidOperationException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            InterestEarningAccount interestEarning = new("Yana", 1000m);
-            interestEarning.MakeDeposit(1000m, DateTime.UtcNow, "Add monthly savings");
-            interestEarning.MakeWithdrawal(10m, DateTime.UtcNow, "Add monthly savings");
-            interestEarning.PerformMonthEndTransactions();
-
-            Console.WriteLine(interestEarning.ToString());
-
-            Console.WriteLine(interestEarning.GetAccountHistory());
-
-            InterestEarningAccount interest = new InterestEarningAccount("Yana", 1000);
-            interest.PerformMonthEndTransactions();
-
-            Console.WriteLine(interest.GetAccountHistory());
-
-            LineOfCreditAccount lineOfCredit = new LineOfCreditAccount("Yana", 0, 1000m);
-            lineOfCredit.MakeWithdrawal(500m, DateTime.UtcNow, "creadit");
-
-            GiftCartAccount giftcart = new GiftCartAccount("Yana", 1000m, 5000m);
-
-            List<BankAccount> accounts = new List<BankAccount>();
-            accounts.Add(account1);
-            accounts.Add(interest);
-            accounts.Add(lineOfCredit);
-            accounts.Add(giftcart);
-
-            foreach (BankAccount account in accounts)
-            {
-                Console.WriteLine(account); // == Console.WritLine(account.ToString());
-                account.PerformMonthEndTransactions();
-                Console.WriteLine(account.GetAccountHistory());
-            }
+            System.Console.WriteLine(formatter.Format(savings.Transactions));
 
 
-            Console.WriteLine("\nПроверка статусов");
-
-            BankAccount regular = new("Regular Client", 20000m);
-            regular.Status = AccountStatus.Regular;
-            regular.PerformMonthEndTransactions();
-            Console.WriteLine($"Regular: {regular.Balance} руб.");
-
-            BankAccount premium = new("Premium Client", 20000m);
-            premium.Status = AccountStatus.Premium;
-            premium.PerformMonthEndTransactions();
-            Console.WriteLine($"Premium: {premium.Balance} руб.");
-
-            BankAccount vip = new("VIP Client", 20000m);
-            vip.Status = AccountStatus.VIP;
-            vip.PerformMonthEndTransactions();
-            Console.WriteLine($"VIP: {vip.Balance} руб.");
-
-            vip.MakeWithdrawal(1000m, DateTime.UtcNow, "Test purchase");
-            Console.WriteLine($"VIP после списания: {vip.Balance} руб.");
-
-
-            AuditLog.PrintLog();
-
+            ;
         }
     }
-
 }

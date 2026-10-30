@@ -1,5 +1,8 @@
 ﻿namespace Bank
 {
+    /// <summary>
+    /// Contains the entry point of the banking application.
+    /// </summary>
     public class Program
     {
         static void Main(string[] args)

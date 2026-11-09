@@ -7,7 +7,7 @@
             Game game = new Game();
 
             Console.WriteLine("Guess the number from 1 to 100!");
-            Console.WriteLine($"Test: {game.SecretNumber}");
+            Console.WriteLine($"Test: {game.SecretNumber}"); 
         }
     }
 }

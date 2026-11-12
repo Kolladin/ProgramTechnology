@@ -11,6 +11,10 @@
             {
                 stats = storage.Load();
             }
+            catch (InvalidDataException ex)
+            {
+                Console.WriteLine($"Invalid statistics: {ex.Message}");
+            }
             catch (IOException ex)
             {
                 Console.WriteLine($"Error loading statistics: {ex.Message}");

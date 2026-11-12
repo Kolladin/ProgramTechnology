@@ -6,9 +6,7 @@ internal class ConsoleGameRunner
     public void Play(
         Game game,
         GameSettings settings,
-        IHintProvider hints,
-        GameStatistics stats,
-        IStatisticsStorage storage)
+        IHintProvider hints)
     {
         int attempts = 0;
 

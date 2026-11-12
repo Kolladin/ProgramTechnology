@@ -14,6 +14,7 @@
             IHintProvider hints = ChooseHints();
 
             Game game = new Game(settings);
+            game.GuessChecked += OnGuessChecked;
             game.GameFinished += (isWin, attempts) =>
             {
                 if (isWin)
@@ -25,7 +26,7 @@
             };
 
             ConsoleGameRunner runner = new ConsoleGameRunner();
-            runner.Play(game, settings, hints, stats, storage);
+            runner.Play(game, settings, hints);
         }
 
 

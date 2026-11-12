@@ -3,6 +3,12 @@
 internal class Game
 {
     public event Action<int>? GuessChecked;
+    public event Action<bool, int>? GameFinished;
+    public void Finish(bool isWin, int attempts)
+    {
+        GameFinished?.Invoke(isWin, attempts);
+    }
+
     private GameSettings settings;
 
     public int SecretNumber { get; }
@@ -29,6 +35,10 @@ internal class Game
             return -1;
 
         return 0;
+    }
+    public void Finish(bool isWin)
+    {
+        GameFinished?.Invoke(isWin);
     }
 
 

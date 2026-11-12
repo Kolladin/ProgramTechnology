@@ -10,6 +10,35 @@
             Console.WriteLine($"Wins: {stats.Wins}, Losses: {stats.Losses}");
             Console.WriteLine($"Best result: {stats.BestAttempts}");
 
+            GameSettings settings = ChooseSettings();
+            IHintProvider hints = ChooseHints();
+
+            Game game = new Game(settings);
+            game.GameFinished += (isWin, attempts) =>
+            {
+                if (isWin)
+                    stats.AddWin(attempts);
+                else
+                    stats.AddLoss();
+
+                storage.Save(stats);
+            };
+
+            ConsoleGameRunner runner = new ConsoleGameRunner();
+            runner.Play(game, settings, hints, stats, storage);
+        }
+
+
+
+
+        static void OnGuessChecked(int number)
+        {
+            Console.WriteLine($"Event: Player guessed {number}");
+        }
+
+
+        static GameSettings ChooseSettings()
+        {
             GameSettings settings = new GameSettings();
 
             Console.WriteLine("Choose difficulty: 1 - Easy, 2 - Normal, 3 - Hard, 4 - Custom");
@@ -31,7 +60,6 @@
                 settings.MaxNumber = 200;
                 settings.MaxAttempts = 5;
             }
-
             else if (choice == "4")
             {
                 Console.WriteLine("Enter maximum number (10-1000):");
@@ -58,90 +86,28 @@
                     Console.WriteLine("Invalid attempts. Default: 10");
                 }
             }
-
             else
             {
                 Console.WriteLine("Invalid difficulty. Normal selected.");
                 settings.MaxAttempts = 7;
             }
 
-
-            Console.WriteLine("Choose hints: 1 - Simple, 2 - Detailed");
-            string? hintChoice = Console.ReadLine();
-
-            IHintProvider hints;
-
-            if (hintChoice == "2")
-                hints = new DetailedHintProvider();
-            else
-                hints = new SimpleHintProvider();
-
-            Game game = new Game(settings);
-
-            game.GuessChecked += OnGuessChecked;
-
-            int attempts = 0;
-
-            Console.WriteLine($"Guess the number from {settings.MinNumber} to {settings.MaxNumber}!");
-
-            while(true)
-            {
-                Console.WriteLine("Enter your Guess: ");
-                string? guess = Console.ReadLine();
-                bool succes = int.TryParse(guess, out int userNumber);
-
-
-                if (!succes)
-                {
-                    Console.WriteLine("Invalid error!");
-                    continue;
-                }
-                else
-                {
-                    if (userNumber < settings.MinNumber || userNumber > settings.MaxNumber)
-                    {
-                        Console.WriteLine($"Enter a number from {settings.MinNumber} to {settings.MaxNumber}!");
-                        continue;
-                    }
-
-                    attempts++;
-
-                    Console.WriteLine($"Attempts: {attempts}/{game.MaxAttempts}");
-
-                    int result = game.CheckGuess(userNumber);
-
-                    if (result == 0)
-                    {
-                        Console.WriteLine($"You win! Attempts: {attempts}");
-
-                        stats.AddWin(attempts);
-                        storage.Save(stats);
-
-                        break;
-                    }
-                    else
-                    {
-                        Console.WriteLine(hints.GetHint(result));
-                    }
-
-
-                    if (attempts >= game.MaxAttempts)
-                    {
-                        Console.WriteLine($"Game over! The number was {game.SecretNumber}");
-
-                        stats.AddLoss();
-                        storage.Save(stats);
-
-                        break;
-                    }
-
-                }
-
-            }
+            return settings;
         }
-        static void OnGuessChecked(int number)
+
+        static IHintProvider ChooseHints()
         {
-            Console.WriteLine($"Event: Player guessed {number}");
+            Console.WriteLine("Choose hints: 1 - Simple, 2 - Detailed");
+
+            string? choice = Console.ReadLine();
+
+            if (choice == "2")
+                return new DetailedHintProvider();
+
+            return new SimpleHintProvider();
         }
+
+
     }
+
 }

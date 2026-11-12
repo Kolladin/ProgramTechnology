@@ -4,10 +4,40 @@
     {
         static void Main(string[] args)
         {
-            Game game = new Game();
+            GameSettings settings = new GameSettings();
+
+            Console.WriteLine("Choose difficulty: 1 - Easy, 2 - Normal, 3 - Hard");
+
+            string? choice = Console.ReadLine();
+
+            if (choice == "1")
+            {
+                settings.MaxNumber = 50;
+                settings.MaxAttempts = 10;
+            }
+            else if (choice == "2")
+            {
+                settings.MaxNumber = 100;
+                settings.MaxAttempts = 7;
+            }
+            else if (choice == "3")
+            {
+                settings.MaxNumber = 200;
+                settings.MaxAttempts = 5;
+            }
+            else
+            {
+                Console.WriteLine("Invalid difficulty. Normal selected.");
+                settings.MaxAttempts = 7;
+            }
+
+            Game game = new Game(settings);
+
+            game.GuessChecked += OnGuessChecked;
+
             int attempts = 0;
 
-            Console.WriteLine("Guess the number from 1 to 100!");
+            Console.WriteLine($"Guess the number from {settings.MinNumber} to {settings.MaxNumber}!");
 
             while(true)
             {
@@ -23,26 +53,42 @@
                 }
                 else
                 {
-                    if (userNumber < 1 || userNumber > 100)
+                    if (userNumber < settings.MinNumber || userNumber > settings.MaxNumber)
                     {
-                        Console.WriteLine("Enter a number from 1 to 100!");
+                        Console.WriteLine($"Enter a number from {settings.MinNumber} to {settings.MaxNumber}!");
                         continue;
                     }
 
                     attempts++;
 
-                    if (userNumber > game.SecretNumber)
+                    Console.WriteLine($"Attempts: {attempts}/{game.MaxAttempts}");
+
+                    int result = game.CheckGuess(userNumber);
+
+                    if (result == 1)
                         Console.WriteLine("Too High!");
-                    else if (userNumber < game.SecretNumber)
+                    else if (result == -1)
                         Console.WriteLine("Too Low!");
                     else
                     {
                         Console.WriteLine($"You win! Attempts: {attempts}");
                         break;
                     }
+
+
+                    if (attempts >= game.MaxAttempts)
+                    {
+                        Console.WriteLine($"Game over! The number was {game.SecretNumber}");
+                        break;
+                    }
+
                 }
 
             }
+        }
+        static void OnGuessChecked(int number)
+        {
+            Console.WriteLine($"Event: Player guessed {number}");
         }
     }
 }

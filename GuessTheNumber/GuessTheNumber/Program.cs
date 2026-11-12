@@ -5,7 +5,21 @@
         static void Main(string[] args)
         {
             IStatisticsStorage storage = new FileStatisticsStorage();
-            GameStatistics stats = storage.Load();
+            GameStatistics stats = new GameStatistics();
+
+            try
+            {
+                stats = storage.Load();
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine($"Error loading statistics: {ex.Message}");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine($"Access denied: {ex.Message}");
+            }
+
 
             Console.WriteLine($"Wins: {stats.Wins}, Losses: {stats.Losses}");
             Console.WriteLine($"Best result: {stats.BestAttempts}");
@@ -15,6 +29,7 @@
 
             Game game = new Game(settings);
             game.GuessChecked += OnGuessChecked;
+
             game.GameFinished += (isWin, attempts) =>
             {
                 if (isWin)
@@ -22,8 +37,20 @@
                 else
                     stats.AddLoss();
 
-                storage.Save(stats);
+                try
+                {
+                    storage.Save(stats);
+                }
+                catch (IOException ex)
+                {
+                    Console.WriteLine($"Error saving statistics: {ex.Message}");
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    Console.WriteLine($"Access denied: {ex.Message}");
+                }
             };
+
 
             ConsoleGameRunner runner = new ConsoleGameRunner();
             runner.Play(game, settings, hints);

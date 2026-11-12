@@ -4,11 +4,18 @@ internal class Game
 {
     public event Action<int>? GuessChecked;
     public event Action<bool, int>? GameFinished;
+    private bool isFinished = false;
 
     public void Finish(bool isWin, int attempts)
     {
+        if (isFinished)
+            return;
+
+        isFinished = true;
+
         GameFinished?.Invoke(isWin, attempts);
     }
+
 
 
     private GameSettings settings;
